@@ -230,6 +230,9 @@ my $usage = {
             test => {
                 des => 'Show what devices the current policy would match',
             },
+            reset => {
+                des => 'Reset an existing policy',
+            },
             policy => {
                 des => 'Add or adjust the current policy',
                 args => '[opts]',
@@ -934,6 +937,12 @@ sub cmd_rebalance_stop {
     my $mogadm = mogadm();
     my $res = $mogadm->rebalance_stop || fail($mogadm->errstr);
     ok("rebalance stopped");
+}
+
+sub cmd_rebalance_reset {
+    my $mogadm = mogadm();
+    my $res = $mogadm->rebalance_reset || fail($mogadm->errstr);
+    ok("rebalance reset");
 }
 
 # TODO: Make output prettier? Put hostname next to device name, print device
