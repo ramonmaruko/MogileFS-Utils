@@ -3,6 +3,6 @@
 #steps = FindVersion, ChangeVersion, ChangeRPMVersion, CheckChangeLog, DistTest, Commit, Tag, MakeDist, UploadCPAN
 steps = FindVersion, ChangeVersion, CheckChangeLog, DistTest, Commit, Tag, MakeDist, UploadCPAN
 
-svn.tagpattern = MogileFS-Utils-%v
+git.tagpattern = %v
 
 
