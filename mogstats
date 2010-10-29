@@ -302,6 +302,13 @@ sub stats_for_devices {
     return $devs;
 }
 
+sub stats_for_files_sql {
+    my $sql = 'SELECT dmid, classid, COUNT(classid), sum(length), sum(length::int4 * devcount::int4) FROM file GROUP BY 1, 2';
+    return $sql if ($DB_TYPE eq 'Postgres');
+    $sql =~ s/::int4//g;
+    return $sql;
+}
+
 sub stats_for_files {
     my $globals = shift;
     my %classes = %{$globals->{classes}};
@@ -309,7 +316,7 @@ sub stats_for_files {
     my $dbh = get_dbh() or die "Could not get database handle";
 
     verbose("... files stats...");
-    my $stats = $dbh->selectall_arrayref('SELECT dmid, classid, COUNT(classid), sum(length), sum(length * devcount) FROM file GROUP BY 1, 2');
+    my $stats = $dbh->selectall_arrayref(stats_for_files_sql());
     my $files = {};
     for my $stat (@$stats) {
         my $domain  = $classes{$stat->[0]}->{name};
