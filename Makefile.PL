@@ -16,7 +16,7 @@ WriteMakefile(
     },
     META_MERGE              => {
         resources => {
-            homepage    =>      'www.mogilefs.org',
+            homepage    =>      'http://www.mogilefs.org',
             bugtracker  =>      'http://code.google.com/p/mogilefs/issues/list',
             repository  =>      'git://github.com/mogilefs/MogileFS-Utils.git',
             MailingList =>      'http://groups.google.com/group/mogile',
