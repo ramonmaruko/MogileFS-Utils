@@ -426,7 +426,7 @@ sub cmd_check {
                 print "REQUEST FAILURE (is the tracker up?)\n";
             }
         } else {
-            print "INITIAL FAILURE\n";
+            print "INITIAL FAILURE (bad configuration?)\n";
         }
     }
 
@@ -446,7 +446,7 @@ sub cmd_check {
                 print "OK\n";
                 push @urls, [ $hostid, $url ];
             } else {
-                print "REQUEST FAILURE\n";
+                print "REQUEST FAILURE FETCHING: $url\n";
             }
         } else {
             print "skipping; status = $hosts->{$hostid}->{status}\n";
@@ -499,7 +499,7 @@ sub cmd_check {
                        $pct, ($dev->{observed_state} || "?"),
                        $dev->{utilization});
             } else {
-                print "REQUEST FAILURE\n";
+                print "REQUEST FAILURE FETCHING: $url" . "/dev$devid/usage\n";
             }
         }
     }
