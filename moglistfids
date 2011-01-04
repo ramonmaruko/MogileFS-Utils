@@ -1,0 +1,47 @@
+#!/usr/bin/perl
+# Example for building into a backup program.
+
+use strict;
+use warnings;
+
+use MogileFS::Admin;
+use lib './lib';
+use MogileFS::Utils;
+
+my $util = MogileFS::Utils->new;
+my $usage = "--trackers=host --fromfid=123 --count=5000";
+my $c = $util->getopts($usage, qw/fromfid=i count=i/);
+
+my $moga = MogileFS::Admin->new(hosts => $c->{trackers});
+
+my $fromfid = $c->{fromfid} || 0;
+my $count   = $c->{count} || 100;
+
+while ($count) {
+    # Try to fetch the max, but we will likely get less.
+    my $fids_chunk = $moga->list_fids($fromfid, $count);
+    if ($moga->errcode) {
+        die "Error listing fids: ", $moga->errstr, "\n";
+    }
+    my @fids = sort { $a <=> $b } keys %$fids_chunk;
+    last unless @fids;
+    $fromfid = $fids[-1];
+    $count  -= @fids;
+    for my $fid (@fids) {
+        my $file = $fids_chunk->{$fid};
+        print "fid ", $fid, "\n";
+        for my $key (sort keys %$file) {
+            my $val = $file->{$key};
+            $val = _escape_url_string($val) if $key eq 'dkey';
+            print $key, " ", $val, "\n";
+        }
+        print "\n";
+    }
+}
+
+sub _escape_url_string {
+    my $str = shift;
+    $str =~ s/([^a-zA-Z0-9_\,\-.\/\\\: ])/uc sprintf("%%%02x",ord($1))/eg;
+    $str =~ tr/ /+/;
+    return $str;
+}

@@ -1,0 +1,35 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use lib './lib';
+use MogileFS::Utils;
+
+my $util = MogileFS::Utils->new;
+my $usage = "--trackers=host --domain=foo --key='/hello.jpg'";
+my $c = $util->getopts($usage, 'key=s');
+
+my $mogc = $util->client;
+
+my $fid = $mogc->file_info($c->{key});
+if ($mogc->errcode) {
+    die "Error fetching file info: " . $mogc->errstr;
+}
+die "Key not found: " . $c->{key} unless $fid;
+
+# Might replace this with just fetching the devids from above...
+my @paths = $mogc->get_paths($c->{key}, { noverify => 1, pathcount => 99 });
+if ($mogc->errcode) {
+    die "Error fetching paths: " . $mogc->errstr;
+}
+die "No paths found or key does not exist" unless @paths;
+
+print "- file: ", $c->{key}, "\n";
+for my $item (sort keys %$fid) {
+    printf("  %8s: %20s\n", $item, $fid->{$item});
+}
+
+for my $path (@paths) {
+    print " - ", $path, "\n";
+}

@@ -6,3 +6,9 @@ lib/MogileFS/Utils.pm
 mogtool
 mogadm
 mogstats
+mogupload
+mogdelete
+mogfetch
+mogfileinfo
+moglistfids
+moglistkeys

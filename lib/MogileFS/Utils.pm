@@ -3,6 +3,114 @@ package MogileFS::Utils;
 
 our $VERSION = '2.18';
 
+use Getopt::Long;
+use MogileFS::Client;
+
+use fields (
+            'config'
+           );
+
+# Helper object for the individual utilities.
+sub new {
+    my MogileFS::Utils $self = shift;
+    $self = fields::new($self) unless ref $self;
+    $self->_init(@_);
+
+    return $self;
+}
+
+# Predefine some options via configuration.
+sub _init {
+    my MogileFS::Utils $self = shift;
+
+    $self->{config} = {};
+}
+
+sub _readconf {
+    my MogileFS::Utils $self = shift;
+    my $args = shift;
+
+    # Liftedish from mogadm, but we can refactor mogadm to use this instead.
+    my @configs = ($args->{config}, $ENV{MOGUTILSCONF},
+        "$ENV{HOME}/.mogilefs.conf",
+        "/etc/mogilefs/mogilefs.conf");
+    my %opts = ();
+    for my $fn (reverse @configs) {
+        next unless $fn && -e $fn;
+        open my $file, "<$fn"
+            or die "unable to open $fn: $!";
+        while (<$file>) {
+            s/\#.*//;
+            next unless m/^\s*(\w+)\s*=\s*(.+?)\s*$/;
+            $opts{$1} = $2 unless ( defined $opts{$1} );
+        }
+        close $file;
+    }
+
+    return \%opts;
+}
+
+sub config {
+    my MogileFS::Utils $self = shift;
+    return $self->{config};
+}
+
+sub getopts {
+    my MogileFS::Utils $self = shift;
+    my $usage = shift;
+    my @want  = @_;
+
+    my %opts = ();
+    $self->abort_usage($usage) unless @ARGV;
+    GetOptions(\%opts, @want, qw/help trackers=s domain=s/)
+        or $self->abort_usage($usage);
+    my $config = $self->_readconf(\%opts);
+
+    $self->{config} = {%$config, %opts};
+    $self->_verify_config;
+    $self->abort_usage($usage) if $self->{config}->{help};
+    
+    return $self->{config};
+}
+
+sub _verify_config {
+    my MogileFS::Utils $self = shift;
+    my $conf = $self->{config};
+
+    while (my ($k, $v) = each %$conf) {
+        if ($k =~ m/^trackers/) {
+            my @tr = split /,/, $v;
+            for (@tr) {
+                # Client is obnoxious about requiring a port.
+                if ($_ !~ m/:\d+/) {
+                    $_ = $_ . ':7001';
+                }
+            }
+            $conf->{$k} = \@tr;
+        } elsif ($k =~ m/class/) {
+            # "" means "default". Might have to remove this if people have
+            # been adding "default" classes, which I don't think is possible?
+            if ($v eq 'default') {
+                $conf->{$k} = '';
+            }
+        }
+    }
+}
+
+# Do we want to be fancier here?
+sub abort_usage {
+    my MogileFS::Utils $self = shift;
+    my $usage = shift;
+    print "Usage: $0 $usage\n";
+    exit;
+}
+
+sub client {
+    my MogileFS::Utils $self = shift;
+    my $c = $self->{config};
+    return MogileFS::Client->new(domain => $c->{domain},
+        hosts => $c->{trackers});
+}
 
 =head1 NAME
 
@@ -13,6 +121,18 @@ MogileFS::Utils - Command line utilities for the MogileFS distributed file syste
 L<mogadm>
 
 L<mogtool>
+
+L<mogupload>
+
+L<mogfetch>
+
+L<mogdelete>
+
+L<mogfileinfo>
+
+L<moglistkeys>
+
+L<moglistfids>
 
 =head1 SUMMARY
 

@@ -1,0 +1,43 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use lib './lib';
+use MogileFS::Utils;
+
+my $util = MogileFS::Utils->new;
+my $usage = "--trackers=host --domain=foo --key='/hello.jpg' --file='./hello.jpg'";
+my $c = $util->getopts($usage, qw/class=s key=s file=s/);
+
+my $mogc = $util->client;
+
+my $filename = $c->{file};
+
+my $fh;
+my $size;
+if ($filename eq '-') {
+    # Can't upload files without a known filesize?
+    die "STDIN mode not yet supported";
+    $fh = *STDIN;
+} else {
+    $size = -s $filename;
+    die "Could not stat " . $filename unless defined $size;
+    open($fh, "< $filename") or die "Could not open " . $filename;
+}
+
+my $mf = $mogc->new_file($c->{key}, $c->{class}, $size);
+if ($mogc->errcode) {
+    die "Error opening MogileFS file: " . $mogc->errstr;
+}
+
+my $buf;
+while (my $read = read($fh, $buf, 32768)) {
+    die "error reading file" unless defined $read;
+    last if $read == 0;
+    print $mf $buf;
+}
+
+unless ($mf->close) {
+    die "Error writing file: " . $mogc->errcode . ": " . $mogc->errstr;
+}

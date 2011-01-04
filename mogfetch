@@ -1,0 +1,57 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use lib './lib';
+use MogileFS::Utils;
+
+my $util = MogileFS::Utils->new;
+my $usage = "--trackers=host --domain=foo --key='/hello.jpg' --file='./output'";
+my $c = $util->getopts($usage, qw/key=s file=s/);
+
+my $mogc = $util->client;
+
+# Default to noverify, don't hang up the tracker. We'll try all paths.
+my @paths = $mogc->get_paths($c->{key}, { noverify => 1 });
+if ($mogc->errcode) {
+    die "Error fetching paths: " . $mogc->errstr;
+}
+
+die "No paths found or key does not exist" unless @paths;
+
+my $filename = $c->{file};
+my @resses;
+for my $path (@paths) {
+    next unless $path; # overparanoid?
+    my $ua = LWP::UserAgent->new;
+    $ua->timeout(10);
+
+    my $file;
+    if ($filename eq '-') {
+        $file = *STDOUT;
+    } else {
+        open($file, "> $filename") or die "Could not open " . $filename;
+    }
+
+    my $writeout = sub {
+        print $file $_[0];
+    };
+    my $res = $ua->get($path, ':content_cb' => $writeout,
+        ':read_size_hint' => 32768);
+
+    if ($res->is_success) {
+        last;
+    } else {
+        # print all the errors to be the most helpful
+        push(@resses, $res);
+        next;
+    }
+}
+
+if (@resses) {
+    for my $res (@resses) {
+        print STDERR "Got errors while trying to fetch:\n";
+        print STDERR $res->status_line, "\n";
+    }
+}

@@ -8,7 +8,10 @@ WriteMakefile(
     VERSION_FROM                => 'lib/MogileFS/Utils.pm',
     AUTHOR                      => 'Brad Fitzpatrick <brad@danga.com>',
     ABSTRACT                    => 'MogileFS utilities',
-    EXE_FILES                   => ['mogtool', 'mogadm', 'mogstats'],
+    EXE_FILES                   => ['mogtool', 'mogadm', 'mogstats',
+        'mogupload', 'mogfetch', 'mogdelete', 'mogfileinfo', 'moglistkeys',
+        'moglistfids',
+                                   ],
     PREREQ_PM                   => {
         'LWP::Simple'      => 0,
         'Compress::Zlib'   => 0,

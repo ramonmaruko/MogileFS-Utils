@@ -1,0 +1,18 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use lib './lib';
+use MogileFS::Utils;
+
+my $util = MogileFS::Utils->new;
+my $usage = "--trackers=host --domain=foo --key='/hello.jpg'";
+my $c = $util->getopts($usage, 'key=s');
+
+my $mogc = $util->client;
+
+$mogc->delete($c->{key});
+if ($mogc->errcode) {
+    print STDERR "Error deleting file: ", $mogc->errstr, "\n";
+}

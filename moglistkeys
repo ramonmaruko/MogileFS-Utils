@@ -1,0 +1,23 @@
+#!/usr/bin/perl
+# TODO: Add ways to limit # of keys displayed
+
+use strict;
+use warnings;
+
+use lib './lib';
+use MogileFS::Utils;
+
+my $util = MogileFS::Utils->new;
+my $usage = "--trackers=host --domain=foo --key_prefix='bar/'";
+my $c = $util->getopts($usage, 'key_prefix=s');
+
+my $mogc = $util->client;
+
+$mogc->foreach_key(prefix => $c->{key_prefix}, sub {
+    my $key = shift;
+    print $key, "\n";
+});
+
+if ($mogc->errcode) {
+    print STDERR "Error listing files: ", $mogc->errstr, "\n";
+}
