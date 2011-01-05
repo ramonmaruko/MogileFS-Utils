@@ -15,10 +15,8 @@ my $mogc = $util->client;
 my $filename = $c->{file};
 
 my $fh;
-my $size;
+my $size = 0;
 if ($filename eq '-') {
-    # Can't upload files without a known filesize?
-    die "STDIN mode not yet supported";
     $fh = *STDIN;
 } else {
     $size = -s $filename;
@@ -26,16 +24,15 @@ if ($filename eq '-') {
     open($fh, "< $filename") or die "Could not open " . $filename;
 }
 
-my $mf = $mogc->new_file($c->{key}, $c->{class}, $size);
+my $mf = $mogc->new_file($c->{key}, $c->{class}, undef);
 if ($mogc->errcode) {
     die "Error opening MogileFS file: " . $mogc->errstr;
 }
 
 my $buf;
-while (my $read = read($fh, $buf, 32768)) {
+while (my $read = read($fh, $buf, 1024 * 1024)) {
     die "error reading file" unless defined $read;
-    last if $read == 0;
-    print $mf $buf;
+    $mf->print($buf);
 }
 
 unless ($mf->close) {
