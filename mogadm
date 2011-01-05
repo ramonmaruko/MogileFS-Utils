@@ -1437,16 +1437,6 @@ Check to ensure that all of the MogileFS system components are functioning
 and that we can contact everybody.  The quickest way of ensuring that the
 entire MogileFS system is functional from the current machine's point of view.
 
-=item B<stats>
-
-Attempt to get statistics for the MogileFS world. This should provide
-statistics on: the number of files present on each device; the number of files
-in each (domain,class) tuple; statistics about present replication devcounts
-and pending replications.
-
-Due to design constraints, the stats command may presently fail if some
-statistic takes too long to generate.
-
 =item B<host add E<lt>hostE<gt> [host options]>
 
 =item B<host modify E<lt>hostE<gt> [host options]>
@@ -1662,10 +1652,6 @@ Check the status of your entire MogileFS system:
 
     $ mogadm check
     
-Check MogileFS system statistics:
-
-    $ mogadm stats
-
 Check every file in the entire MogileFS system:
 
     $ mogadm fsck reset

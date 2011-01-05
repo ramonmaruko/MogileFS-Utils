@@ -31,7 +31,7 @@ sub _readconf {
     my $args = shift;
 
     # Liftedish from mogadm, but we can refactor mogadm to use this instead.
-    my @configs = ($args->{config}, $ENV{MOGUTILSCONF},
+    my @configs = ($args->{conf}, $ENV{MOGUTILSCONF},
         "$ENV{HOME}/.mogilefs.conf",
         "/etc/mogilefs/mogilefs.conf");
     my %opts = ();
@@ -62,7 +62,7 @@ sub getopts {
 
     my %opts = ();
     $self->abort_usage($usage) unless @ARGV;
-    GetOptions(\%opts, @want, qw/help trackers=s domain=s/)
+    GetOptions(\%opts, @want, qw/help trackers=s domain=s conf=s/)
         or $self->abort_usage($usage);
     my $config = $self->_readconf(\%opts);
 
@@ -120,7 +120,7 @@ MogileFS::Utils - Command line utilities for the MogileFS distributed file syste
 
 L<mogadm>
 
-L<mogtool>
+L<mogstats>
 
 L<mogupload>
 
@@ -134,13 +134,29 @@ L<moglistkeys>
 
 L<moglistfids>
 
+L<mogtool> (DEPRECATED: Do not use!)
+
 =head1 SUMMARY
 
 Please refer to the documentation for the tools included in this distribution.
 
+=head1 CONFIGURATION FILE
+
+Most of the utilities in this package support a configuration file. Common
+options can be pushed into the config file, such as trackers, domain, or
+class. The file is in B</etc/mogilefs/mogilefs.conf> and B<~/.mogilefs.conf>
+by default. You may also specify a configuration via B<--conf=filename>
+
+Example:
+
+    trackers = 10.0.0.1:7001,10.0.0.3:7001
+    domain = foo
+
 =head1 AUTHOR
 
 Brad Fitzpatrick E<lt>L<brad@danga.com>E<gt>
+
+Dormando E<lt>L<dormando@rydia.net>E<gt>
 
 =head1 BUGS
 

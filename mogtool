@@ -8,6 +8,8 @@ eval 'exec /usr/bin/perl  -S $0 ${1+"$@"}'
 
 mogtool -- Inject/extract data to/from a MogileFS installation
 
+B<WARNING>: this utility is deprecated! See L<MogileFS::Utils>
+
 =head1 SYNOPSIS
 
     $ mogtool [general-opts] <command> [command-opts] <command-args>
@@ -1417,7 +1419,8 @@ sub mdelete {
 abortWithUsage() if $opts{help};
 
 sub abortWithUsage {
-    my $msg = join '', @_;
+    my $msg = "!!!mogtool is DEPRECATED and will be removed in the future!!!\n";
+    $msg .= join '', @_;
 
     if ( $msg ) {
         pod2usage( -verbose => 1, -exitval => 1, -message => "\n$msg\n" );
