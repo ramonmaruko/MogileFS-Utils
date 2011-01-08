@@ -1,6 +1,6 @@
 name:      MogileFS-Utils
 summary:   MogileFS-Utils - MogileFS utilities.
-version:   2.18
+version:   2.19
 release:   1%{?dist}
 vendor:    Alan Kasindorf <dormando@rydia.net>
 packager:  Jonathan Steinert <rpm@hachi.kuiki.net>
@@ -11,7 +11,7 @@ buildarch: noarch
 source:    MogileFS-Utils-%{version}.tar.gz
 autoreq:   no
 requires:  perl
-requires:  perl(MogileFS::Client) >= 1.10
+requires:  perl(MogileFS::Client) >= 1.14
 requires:  perl(Compress::Zlib)
 
 %description

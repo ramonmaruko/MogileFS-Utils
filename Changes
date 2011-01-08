@@ -1,4 +1,24 @@
-  * Fix files stat under Postgres (Robin H. Johnson)
+2.19 -- 2011-01-08
+
+   * bump required client version (dormando <dormando@rydia.net>)
+
+   * Add mogfiledebug utility (dormando <dormando@rydia.net>)
+
+   * documentation updates. (dormando <dormando@rydia.net>)
+
+   * new commandline utils. (dormando <dormando@rydia.net>)
+
+   * teach mogstats what rebal queue is (dormando <dormando@rydia.net>)
+
+   * make a few errors less infuriating (dormando <dormando@rydia.net>)
+
+   * Fix files stat under Postgres. (Robin H. Johnson <robbat2@gentoo.org>)
+
+   * edit the meta details a little. (dormando <dormando@rydia.net>)
+
+   * Ignore generated Makefile (Tomas Doran <bobtfish@bobtfish.net>)
+
+   * Add resources (Tomas Doran <bobtfish@bobtfish.net>)
 
 2.18 -- 2010-09-28
 
