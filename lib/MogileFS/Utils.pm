@@ -134,6 +134,8 @@ L<moglistkeys>
 
 L<moglistfids>
 
+L<mogfiledebug>
+
 L<mogtool> (DEPRECATED: Do not use!)
 
 =head1 SUMMARY
