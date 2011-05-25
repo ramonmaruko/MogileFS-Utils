@@ -638,12 +638,7 @@ sub cmd_domain_list {
 sub cmd_domain_add {
     my $args = shift;
 
-    my $domains = domains() or
-        fail_text('no_domains');
-
-    # make sure it doesn't exist
     my $domain = delete $args->{domain};
-    fail('Domain already exists.') if $domains->{$domain};
 
     # create
     my $mogadm = mogadm();
@@ -657,12 +652,8 @@ sub cmd_domain_add {
 
 sub cmd_domain_delete {
     my $args = shift;
-    my $domains = domains() or
-        fail_text('no_domains');
 
-    # make sure it doesn't exist
     my $domain = $args->{domain};
-    fail('Domain not found.') unless $domains->{$domain};
 
     # destroy
     my $mogadm = mogadm();
@@ -681,15 +672,11 @@ sub cmd_class_list {
 
 sub cmd_class_add {
     my $args = shift;
-    my $domains = domains() or
-        fail_text('no_domains');
 
     my $domain = delete $args->{domain};
     my $class  = delete $args->{class};
 
     cmd_help_die() unless $domain && $class;
-    fail('Domain not found.') unless $domains->{$domain};
-    fail('Class already exists.') if $domains->{$domain}->{$class};
 
     $args->{mindevcount} ||= 2;
     $args->{replpolicy}  ||= '';
@@ -705,15 +692,11 @@ sub cmd_class_add {
 
 sub cmd_class_modify {
     my $args = shift;
-    my $domains = domains() or
-        fail_text('no_domains');
 
     my $domain = delete $args->{domain};
     my $class  = delete $args->{class};
 
     cmd_help_die() unless $domain && $class;
-    fail('Domain not found.') unless $domains->{$domain};
-    fail('Class does not exist.') unless $domains->{$domain}->{$class};
 
     $args->{mindevcount} ||= 2;
     $args->{replpolicy}  ||= '';
@@ -730,15 +713,10 @@ sub cmd_class_modify {
 sub cmd_class_delete {
     my $args = shift;
 
-    my $domains = domains() or
-        fail_text('no_domains');
-
     my $domain = $args->{domain};
     my $class  = $args->{class};
 
     cmd_help_die() unless $domain && $class;
-    fail('Domain not found.') unless $domains->{$domain};
-    fail('Class does not exist.') unless $domains->{$domain}->{$class};
 
     my $mogadm = mogadm();
     $mogadm->delete_class($domain, $class);
