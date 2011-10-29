@@ -1,3 +1,7 @@
+2.21 -- 2011-10-29
+
+   * Improve error handling for broken usage files in `mogadm check`
+
 2.20 -- 2011-06-15
 
    * Remove redundant tracker calls. Required for MogileFS::Server 2.50 as
