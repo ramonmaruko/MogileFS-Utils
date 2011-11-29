@@ -159,6 +159,7 @@ my $usage = {
                     "<class>"  => "Name of class to add.",
                     "--mindevcount=i" => "Minimum number of replicas.",
                     "--replpolicy=s" => "Replication policy string.",
+                    "--hashtype=s" => "Hash algorithm string ('MD5', 'NONE').",
                 },
             },
             modify => {
@@ -169,6 +170,7 @@ my $usage = {
                     "<class>"  => "Name of class to add.",
                     "--mindevcount=i" => "Minimum number of replicas.",
                     "--replpolicy=s" => "Replication policy string.",
+                    "--hashtype=s" => "Hash algorithm string ('MD5', 'NONE').",
                 },
             },
             delete => {
@@ -631,13 +633,14 @@ sub cmd_domain_list {
     my $domains = domains() or
         fail_text('no_domains');
     # now iterate
-    printf " %-20s %-20s %-12s  %-12s\n", "domain", "class", "mindevcount", "replpolicy";
-    printf "%-20s %-20s %-12s %-12s\n", '-' x 20, '-' x 20, '-' x 13, '-' x 12;
+    printf " %-20s %-20s %-12s  %-12s %-7s\n", "domain", "class", "mindevcount", "replpolicy", "hashtype";
+    printf "%-20s %-20s %-12s %-12s %-7s\n", '-' x 20, '-' x 20, '-' x 13, '-' x 12, '-' x 7;
     foreach my $domain (sort keys %$domains) {
         foreach my $class (sort keys %{$domains->{$domain}}) {
             my $dom = $domains->{$domain}->{$class};
-            printf " %-20s %-20s      %-8d %-13s\n", $domain, $class,
-                $dom->{mindevcount} || 0, $dom->{replpolicy} || '';
+            printf " %-20s %-20s      %-8d %-13s %-7s\n", $domain, $class,
+                $dom->{mindevcount} || 0, $dom->{replpolicy} || '',
+                $dom->{hashtype} || '';
         }
         print "\n";
     }
@@ -1584,6 +1587,11 @@ set to anything >= 1.
 
 Stringified replication policy. ie "MultipleHosts(3)" is equivalent to a
 --mindevcount=3. See documentation or plugins on alternative policies.
+
+=item B<--hashtype=E<lt>valueE<gt>>
+
+Name of the hash algorithm used for checksumming.  "MD5" or "NONE" for no
+checksumming.
 
 =back
 
