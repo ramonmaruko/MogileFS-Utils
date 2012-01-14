@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-=head1 NAMe
+=head1 NAME
 
 moglistkeys -- Lists keys out of a MogileFS domain
 
