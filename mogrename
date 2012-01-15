@@ -6,13 +6,13 @@ mogrename -- Rename file (key) from one key to another
 
 =head1 SYNOPSIS
 
-$ mogrename [OPTIONS] --old-key='/hello.jpg' --new-key='/bye.jpg'
+    $ mogrename [OPTIONS] --old-key='/hello.jpg' --new-key='/bye.jpg'
 
-$ mogupload --trackers=host --domain=foo --class=bar \
---old-key='/hello.jpg' --new-key='/bye.jpg'
+    $ mogupload --trackers=host --domain=foo --class=bar \
+                --old-key='/hello.jpg' --new-key='/bye.jpg'
 
-$ mogupload --trackers=host1:7001,host2:7001 --domain=foo --class=bar \
---old-key='/hello.jpg' --new-key='/bye.jpg'
+    $ mogupload --trackers=host1:7001,host2:7001 --domain=foo --class=bar \
+                --old-key='/hello.jpg' --new-key='/bye.jpg'
 
 =head1 OPTIONS
 
@@ -63,13 +63,13 @@ use MogileFS::Utils;
 my $utils = MogileFS::Utils->new;
 
 my $usage = "--trackers=host --domain=foo --class=bar "
-          . "--old-key='/hello.jpg' --new-key='/bye.jpg'";
+          . "--old_key='/hello.jpg' --new_key='/bye.jpg'";
 
-my $options = $utils->getopts($usage, qw(old-key=s new-key=s));
+my $options = $utils->getopts($usage, qw(old_key=s new_key=s));
 
 my $mogile_client = $utils->client;
 
-$mogile_client->rename($options->{'old-key'}, $options->{'new-key'});
+$mogile_client->rename($options->{'old_key'}, $options->{'new_key'});
 
 if ($mogile_client->errcode) {
     die "Error renaming file (key) from " . $mogile_client->errstr;
