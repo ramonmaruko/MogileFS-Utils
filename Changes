@@ -1,4 +1,7 @@
-2.21 -- 2011-12-16
+2.22 -- 2012-01-27
+
+   * Fix bug in mogstats config file parsing. Valid values with '#' were being
+     truncated (Bartzy)
 
    * Add "mogrename" utility script (kwilczynski, Krzysztof Wilczynski).
 
