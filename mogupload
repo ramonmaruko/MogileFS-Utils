@@ -67,6 +67,7 @@ my $c = $util->getopts($usage, qw/class=s key=s file=s/);
 my $mogc = $util->client;
 
 my $filename = $c->{file};
+die "Must specify a file to upload with --file" unless $filename;
 
 my $fh;
 my $size = 0;
