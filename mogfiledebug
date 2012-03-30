@@ -151,6 +151,10 @@ if (my $devids = $details->{devids}) {
     print " - Raw devids: ", $devids, "\n";
 }
 
+if (my $hash = $details->{checksum}) {
+    print " - Stored checksum: ", $hash, "\n";
+}
+
 sub fetch_path {
     my $path = shift;
     my $ua   = LWP::UserAgent->new;
