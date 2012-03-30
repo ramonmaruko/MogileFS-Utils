@@ -15,7 +15,7 @@ WriteMakefile(
     PREREQ_PM                   => {
         'LWP::Simple'      => 0,
         'Compress::Zlib'   => 0,
-        'MogileFS::Client' => '1.14',
+        'MogileFS::Client' => '1.16',
     },
     META_MERGE              => {
         resources => {
