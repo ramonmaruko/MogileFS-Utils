@@ -104,16 +104,20 @@ if (@paths) {
     print "No length, cannot verify content length" unless defined $len;
     # No I don't have a good excuse for why this isn't one loop.
     for my $res (@results) {
-        print "Results for path: ", $res->{path}, "\n";
+        print "\nResults for path: ", $res->{path}, "\n";
+        if ($res->{res} =~ /404/) {
+            print " - ERROR: File copy is missing: ", $res->{res}, "\n";
+            next;
+        }
         $hash = $res->{hash} unless $hash;
         if ($hash ne $res->{hash}) {
             print " - ERROR: Hash does not match first path!\n";
         }
-        if (defined $len && $len != $res->{length}) {
+        if (defined $len && defined $res->{length} && $len != $res->{length}) {
             print " - ERROR: Length does not match file row!\n";
         }
-        print " - Hash: ", $res->{hash}, "\n";
-        print " - Length: ", $res->{length}, "\n";
+        print " - MD5 Hash: ", $res->{hash}, "\n";
+        print " - Length: ", $res->{length}, "\n" if defined $res->{length};
         print " - HTTP result: ", $res->{res}, "\n";
     }
 } else {
@@ -121,7 +125,7 @@ if (@paths) {
 }
 
 # print info from all of the queues. Raw is fine? failcount/etc.
-print "Tempfile and/or queue rows...\n";
+print "\nTempfile and/or queue rows...\n";
 my $found = 0;
 for my $type (qw/tempfile replqueue delqueue rebqueue fsckqueue/) {
     my $part = $parts{$type};
@@ -136,7 +140,7 @@ print "none.\n" unless $found;
 
 # Print rest of file info like file_info
 if (my $fid = $parts{fid}) {
-    print "- File Row:\n";
+    print "\n- File Row:\n";
     for my $item (sort keys %$fid) {
         printf("  %8s: %20s\n", $item, $fid->{$item});
     }
@@ -148,11 +152,11 @@ See above for any matching rows from tempfile or delqueue.
 }
 
 if (my $devids = $details->{devids}) {
-    print " - Raw devids: ", $devids, "\n";
+    print "\n- Raw devids: ", $devids, "\n";
 }
 
 if (my $hash = $details->{checksum}) {
-    print " - Stored checksum: ", $hash, "\n";
+    print "\n- Stored checksum: ", $hash, "\n";
 }
 
 sub fetch_path {
@@ -160,7 +164,7 @@ sub fetch_path {
     my $ua   = LWP::UserAgent->new;
     my $ctx  = Digest::MD5->new;
     $ua->timeout(10);
-    my %toret = ();
+    my %toret = (length => 0);
 
     my $sum_up = sub {
         $toret{length} += length($_[0]);
