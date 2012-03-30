@@ -69,7 +69,9 @@ use Digest::MD5;
 use LWP::UserAgent;
 
 my $util = MogileFS::Utils->new;
-my $usage = "--trackers=host --domain=foo --key='/hello.jpg'";
+my $usage = qq{--trackers=host --domain=foo --key='/hello.jpg' 
+If FID is known, but domain/key are not known:
+--trackers=host --domain=anything --fid=123456};
 # FIXME: add "nofetch" mode that just prints paths?
 my $c = $util->getopts($usage, qw/key=s fid=i/);
 
