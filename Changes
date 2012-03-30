@@ -1,3 +1,11 @@
+2.23 -- 2012-03-30
+
+   * Support checksums in mogadm (eric wong)
+
+   * Clean mogfiledebug output (dormando)
+
+   * Misc util fixes (dormando)
+
 2.22 -- 2012-01-27
 
    * Fix bug in mogstats config file parsing. Valid values with '#' were being
